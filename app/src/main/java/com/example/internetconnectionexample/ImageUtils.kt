@@ -9,20 +9,21 @@ import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 
-class ImageUtils (val resolveBitmap: (Bitmap) -> Unit): AsyncTask<String, Void, Bitmap>() {
+class ImageUtils (private val resolveBitmap: (Bitmap) -> Unit):
+    AsyncTask<String, Void, Bitmap>() {
     override fun doInBackground(vararg params: String?): Bitmap? {
-        var mBitmap: Bitmap? = null
+        var bitmap: Bitmap? = null
         val url = URL(params[0])
         try {
-            val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            val urlConnection = url.openConnection() as HttpURLConnection
             urlConnection.doInput = true
             urlConnection.connect()
             val inputStream: InputStream = BufferedInputStream(urlConnection.inputStream)
-            mBitmap = BitmapFactory.decodeStream(inputStream)
+            bitmap = BitmapFactory.decodeStream(inputStream)
         } catch (e: Exception) {
             // do something
         }
-        return if (mBitmap != null) mBitmap else null
+        return bitmap
     }
 
     override fun onPostExecute(result: Bitmap?) {
